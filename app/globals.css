@@ -1,26 +1,371 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Marka renkleri kesinleşince burası ve lib/topics.ts değişir. */
+@theme {
+  --color-ink: #1f2340;
+  --color-coral: #ff7a66;
+  --color-cobalt: #1c3cff;
+  --font-sans: var(--font-xmind), ui-sans-serif, system-ui, sans-serif;
+  --shadow-soft: 0 18px 50px -18px rgb(31 35 64 / 0.22);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Base katmanında durur ki outline-none gibi yardımcı sınıflar bunu ezebilsin. */
+@layer base {
+  body {
+    color: var(--color-ink);
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.page-glow {
+  background: linear-gradient(165deg, #e2f1ff 0%, #f1eeff 36%, #ffefe6 72%, #fff8f3 100%);
+}
+
+@keyframes word-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.25em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.anim-word {
+  animation: word-in 0.4s ease-out both;
+}
+
+.anim-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.hook-photo {
+  mask-image: linear-gradient(to bottom, transparent, #000 20%);
+}
+
+@media (min-width: 64rem) {
+  .hook-photo {
+    mask-image: linear-gradient(to right, transparent, #000 30%);
+  }
+}
+
+@keyframes buzz {
+  0%,
+  10%,
+  100% {
+    transform: none;
+  }
+  2%,
+  6% {
+    transform: rotate(-9deg);
+  }
+  4%,
+  8% {
+    transform: rotate(9deg);
+  }
+}
+
+@keyframes buzz-wave {
+  0%,
+  10%,
+  100% {
+    opacity: 0;
+  }
+  2%,
+  8% {
+    opacity: 1;
+  }
+}
+
+@keyframes app-panel-in {
+  from {
+    transform: var(--app-panel-from);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes app-panel-out {
+  from {
+    transform: none;
+  }
+  to {
+    transform: var(--app-panel-from);
+  }
+}
+
+@keyframes app-backdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes app-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes app-phone {
+  from {
+    transform: translateY(100%) rotate(5deg);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.app-buzz {
+  animation: buzz 6s ease-in-out 2s infinite;
+  transform-origin: 50% 50%;
+}
+
+.app-buzz-wave {
+  animation: buzz-wave 6s ease-in-out 2s infinite;
+  opacity: 0;
+}
+
+.group:hover .app-buzz,
+.group:hover .app-buzz-wave {
+  animation-duration: 2.5s;
+  animation-delay: 0s;
+}
+
+.app-panel {
+  --app-panel-from: translateY(100%);
+  display: none;
+}
+
+.app-panel[open] {
+  display: block;
+}
+
+.app-panel[data-state="open"] {
+  animation: app-panel-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-panel[data-state="closing"] {
+  animation: app-panel-out 0.28s cubic-bezier(0.55, 0, 1, 0.45) both;
+}
+
+.app-panel::backdrop {
+  background: rgb(10 12 30 / 0.5);
+  backdrop-filter: blur(3px);
+}
+
+.app-panel[data-state="open"]::backdrop {
+  animation: app-backdrop 0.4s ease both;
+}
+
+.app-panel[data-state="closing"]::backdrop {
+  animation: app-backdrop 0.28s ease reverse both;
+}
+
+.app-panel[data-state="open"] .app-rise {
+  animation: app-rise 0.45s ease-out 0.14s both;
+}
+
+.app-panel[data-state="open"] .app-phone {
+  animation: app-phone 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
+}
+
+.app-panel[data-state="open"] .app-card {
+  animation: app-rise 0.4s ease-out both;
+}
+
+@media (min-width: 64rem) {
+  .app-panel {
+    --app-panel-from: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-buzz,
+  .app-buzz-wave,
+  .app-panel[data-state],
+  .app-panel[data-state]::backdrop,
+  .app-panel[data-state] .app-rise,
+  .app-panel[data-state] .app-phone,
+  .app-panel[data-state] .app-card {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.stage-card {
+  transition:
+    flex-grow 1s cubic-bezier(0.45, 0, 0.15, 1),
+    height 1s cubic-bezier(0.45, 0, 0.15, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) var(--stage-delay),
+    opacity 0.5s ease var(--stage-delay);
+}
+
+.stage-list[data-in="false"] .stage-card {
+  opacity: 0;
+  transform: translateY(5rem) rotate(var(--stage-tilt));
+}
+
+.stage-card img {
+  transition: transform 1.4s cubic-bezier(0.45, 0, 0.15, 1);
+}
+
+.stage-card[data-active="true"] img {
+  transform: scale(1.03);
+}
+
+/* Yazı önce sönerek çıkar; görünmezlik, solma bittikten sonra devreye girer. */
+.stage-detail {
+  transition: visibility 0s linear 0.35s;
+  visibility: hidden;
+}
+
+.stage-card[data-active="true"] .stage-detail {
+  transition-delay: 0s;
+  visibility: visible;
+}
+
+.stage-detail > * {
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.stage-card[data-active="true"] .stage-detail > * {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.7s ease,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stage-card[data-active="true"] .stage-detail > :nth-child(1) {
+  transition-delay: 0.4s;
+}
+
+.stage-card[data-active="true"] .stage-detail > :nth-child(2) {
+  transition-delay: 0.5s;
+}
+
+.stage-card[data-active="true"] .stage-detail > :nth-child(3) {
+  transition-delay: 0.6s;
+}
+
+@keyframes auth-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes auth-photo {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.auth-form > * {
+  animation: auth-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.auth-form > :nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.auth-form > :nth-child(2) {
+  animation-delay: 0.13s;
+}
+
+.auth-form > :nth-child(3) {
+  animation-delay: 0.21s;
+}
+
+.auth-form > :nth-child(4) {
+  animation-delay: 0.29s;
+}
+
+.auth-form > :nth-child(n + 5) {
+  animation-delay: 0.37s;
+}
+
+.auth-photo {
+  animation: auth-photo 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-card,
+  .stage-card img,
+  .stage-detail,
+  .stage-detail > *,
+  .stage-card[data-active="true"] .stage-detail,
+  .stage-card[data-active="true"] .stage-detail > * {
+    transition: none;
+  }
+
+  .auth-form > *,
+  .auth-photo {
+    animation: none;
+  }
+
+  .stage-list[data-in="false"] .stage-card {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fan-card {
+  transform: translateY(var(--fan-drop)) rotate(var(--fan-rotate));
+  transform-origin: 50% 100%;
+  transition: transform 0.3s ease;
+}
+
+.fan-card:hover,
+.fan-card:focus-within {
+  transform: translateY(-4%) rotate(0deg) scale(1.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-word,
+  .anim-float {
+    animation: none;
+  }
+
+  .fan-card {
+    transition: none;
+  }
 }
