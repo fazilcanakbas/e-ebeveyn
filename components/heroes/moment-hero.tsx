@@ -1,51 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-import { LogoPlaceholder } from "@/components/logo-placeholder";
-import { MobileMenu } from "@/components/mobile-menu";
-import { allTopics } from "@/lib/topics";
-import { AppDrawer } from "./app-drawer";
 import { MomentAge } from "./moment-age";
-
-export function MomentHeader() {
-  return (
-    <header className="relative z-20 flex h-14 shrink-0 items-stretch justify-between border-b border-white/25 text-white lg:h-[4.5rem]">
-      <div className="flex items-center px-4 lg:border-r lg:border-white/25 lg:px-6 xl:px-8">
-        <LogoPlaceholder />
-      </div>
-      <nav aria-label="Ana menü" className="hidden flex-1 items-center justify-center lg:flex">
-        <ul className="flex gap-4 font-medium xl:gap-6 2xl:gap-8">
-          {allTopics.map((topic) => (
-            <li key={topic.label}>
-              <a href={topic.href} className="transition-opacity hover:opacity-70">
-                {topic.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <div className="flex items-stretch">
-        <AppDrawer />
-        <Link
-          href="/giris"
-          className="hidden items-center border-l border-white/25 px-4 font-medium whitespace-nowrap transition-opacity hover:opacity-70 lg:flex xl:px-6"
-        >
-          Giriş yap
-        </Link>
-        <div className="hidden items-center border-l border-white/25 px-3 lg:flex">
-          <Link
-            href="/uye-ol"
-            className="rounded-full bg-[#1c3cff] px-5 py-3 font-semibold whitespace-nowrap transition-colors hover:bg-white hover:text-[#1c3cff] xl:px-6"
-          >
-            Üye ol
-          </Link>
-        </div>
-        <div className="flex items-center pr-2 lg:hidden">
-          <MobileMenu buttonClassName="text-white" />
-        </div>
-      </div>
-    </header>
-  );
-}
 
 // Fotoğraf geçici, Pexels: 27176791.
 export function MomentHero() {

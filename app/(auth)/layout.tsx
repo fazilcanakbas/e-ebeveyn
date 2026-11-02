@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="grid min-h-svh flex-1 bg-white lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <div className="flex min-h-svh flex-col px-5 py-5 sm:px-10 lg:px-14 lg:py-7">
-        <Link href="/v12" className="text-xl font-semibold tracking-[-0.02em]">
+        <Link href="/" className="text-xl font-semibold tracking-[-0.02em]">
           e-ebeveyn
         </Link>
         <main className="mx-auto flex w-full max-w-[27rem] flex-1 flex-col justify-center py-8">

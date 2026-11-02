@@ -60,7 +60,7 @@ export function AppDrawer() {
         type="button"
         onClick={open}
         aria-label="Uygulamayı indirin"
-        className="group flex cursor-pointer items-center gap-2 px-3 font-medium lg:border-l lg:border-white/25 lg:px-4 xl:px-5"
+        className="moment-line group flex cursor-pointer items-center gap-2 px-3 font-medium lg:border-l lg:px-4 xl:px-5"
       >
         <svg
           viewBox="0 0 40 40"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ageStages } from "@/lib/age-stages";
+import { guideStages } from "@/lib/age-stages";
 
 export function MomentAge() {
   const [open, setOpen] = useState(false);
@@ -21,7 +21,7 @@ export function MomentAge() {
 
   return (
     <ul aria-label="Bebeğinizin yaşı" className="anim-word flex flex-wrap gap-1.5 lg:gap-2">
-      {ageStages.map((stage, index) => (
+      {guideStages.map((stage, index) => (
         <li key={stage.id}>
           <a
             href={`#donem-${stage.id}`}

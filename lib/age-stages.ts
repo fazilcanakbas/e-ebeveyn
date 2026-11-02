@@ -1,9 +1,11 @@
-// Taslak içerik. Kaynak: CDC gelişim basamakları, AASM uyku süreleri, DSÖ beslenme önerisi,
+// Taslak içerik. Kaynak: CDC gelişim basamakları, AASM uyku süreleri, DSÖ beslenme önerisi, ACOG (hamilelik),
 // Sleep Foundation (yenidoğan uykusu). Yayından önce uzman onayı gerekir.
-// Fotoğraflar geçici, Pexels: 3270224, 10190040, 6209327, 3933107, 3933039.
+// Fotoğraflar geçici, Pexels: 5853667, 3270224, 10190040, 6209327, 3933107, 3933039.
 export type AgeStage = {
   id: string;
   label: string;
+  // Dönemin bittiği ay (hariç). Doğum tarihinden dönem bulmak için.
+  untilMonth: number;
   headline: string;
   facts: { topic: string; text: string }[];
   photo: string;
@@ -11,10 +13,27 @@ export type AgeStage = {
   photoPosition: string;
 };
 
+// Doğumla biter; bebek dönemleri ageStages'ta, sayfadaki tam sıra guideStages'ta.
+export const pregnancyStage: AgeStage = {
+  id: "hamilelik",
+  label: "Hamilelik",
+  untilMonth: 0,
+  headline: "Doğuma hazırlanılan kırk hafta.",
+  facts: [
+    { topic: "Uyku", text: "Yan yatmak önerilir" },
+    { topic: "Beslenme", text: "Folik asit ve demir" },
+    { topic: "Gelişim", text: "18–20. haftada ilk tekmeler" },
+  ],
+  photo: "/images/stages/hamilelik.jpg",
+  photoAlt: "Elleriyle karnını tutan hamile kadın",
+  photoPosition: "50% 62%",
+};
+
 export const ageStages: AgeStage[] = [
   {
     id: "0-3-ay",
     label: "0–3 ay",
+    untilMonth: 4,
     headline: "Her şeyin ilk kez olduğu haftalar.",
     facts: [
       { topic: "Uyku", text: "Günde 16–18 saat, parça parça" },
@@ -28,6 +47,7 @@ export const ageStages: AgeStage[] = [
   {
     id: "4-6-ay",
     label: "4–6 ay",
+    untilMonth: 7,
     headline: "Dünya birden ilginçleşiyor.",
     facts: [
       { topic: "Uyku", text: "Günde 12–16 saat" },
@@ -41,6 +61,7 @@ export const ageStages: AgeStage[] = [
   {
     id: "7-12-ay",
     label: "7–12 ay",
+    untilMonth: 12,
     headline: "Artık yerinde durmuyor.",
     facts: [
       { topic: "Uyku", text: "Günde 12–16 saat" },
@@ -54,6 +75,7 @@ export const ageStages: AgeStage[] = [
   {
     id: "1-2-yas",
     label: "1–2 yaş",
+    untilMonth: 24,
     headline: "İlk adımlar, ilk sözcükler.",
     facts: [
       { topic: "Uyku", text: "Günde 11–14 saat" },
@@ -67,6 +89,7 @@ export const ageStages: AgeStage[] = [
   {
     id: "2-3-yas",
     label: "2–3 yaş",
+    untilMonth: 36,
     headline: "Her şeye bir “neden?”",
     facts: [
       { topic: "Uyku", text: "Günde 10–14 saat" },
@@ -78,3 +101,5 @@ export const ageStages: AgeStage[] = [
     photoPosition: "60% 40%",
   },
 ];
+
+export const guideStages: AgeStage[] = [pregnancyStage, ...ageStages];

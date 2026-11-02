@@ -3,13 +3,15 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { ageStages } from "@/lib/age-stages";
+import { guideStages } from "@/lib/age-stages";
+import { useReveal } from "./use-reveal";
 
-const tilts = ["-3deg", "2deg", "-1.5deg", "2.5deg", "-2deg"];
+const tilts = ["2.5deg", "-3deg", "2deg", "-1.5deg", "2.5deg", "-2deg"];
 
 export function StageGuides() {
-  const [active, setActive] = useState(0);
-  const list = useRef<HTMLUListElement>(null);
+  // Sıra hamilelikle başlar ama sayfa bebek dönemi açık gelir.
+  const [active, setActive] = useState(1);
+  const list = useReveal<HTMLUListElement>();
   const hoverTimer = useRef<number | undefined>(undefined);
   const hoverTarget = useRef<number | null>(null);
 
@@ -36,27 +38,36 @@ export function StageGuides() {
   useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
 
   useEffect(() => {
-    const node = list.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        node.dataset.in = "true";
-        observer.disconnect();
-      },
-      { threshold: 0.12 },
-    );
-    observer.observe(node);
+    let watcher: number | undefined;
 
     // Hero'daki yaş seçeneği bu bölüme atlayıp ilgili kartı açar.
     const onHash = () => {
-      const index = ageStages.findIndex((stage) => `#donem-${stage.id}` === window.location.hash);
-      if (index >= 0) setActive(index);
-    };
-    window.addEventListener("hashchange", onHash);
+      const index = guideStages.findIndex((stage) => `#donem-${stage.id}` === window.location.hash);
+      if (index < 0) return;
+      setActive(index);
 
+      // Mobilde üstteki kart kapanınca sayfa kayar. Kaydırma ve kart geçişi bitince
+      // açılan kart yerinde değilse görünüme getirilir.
+      window.clearInterval(watcher);
+      const startedAt = performance.now();
+      let lastY = window.scrollY;
+      watcher = window.setInterval(() => {
+        const moving = window.scrollY !== lastY;
+        lastY = window.scrollY;
+        if (moving || performance.now() - startedAt < 1050) return;
+        window.clearInterval(watcher);
+
+        const card = document.getElementById(`donem-${guideStages[index].id}`);
+        if (!card) return;
+        const target = parseFloat(getComputedStyle(card).scrollMarginTop) || 0;
+        if (Math.abs(card.getBoundingClientRect().top - target) > 8) card.scrollIntoView();
+      }, 120);
+    };
+    // Başka sayfadan /#donem-... ile gelindiyse kart açık başlasın.
+    onHash();
+    window.addEventListener("hashchange", onHash);
     return () => {
-      observer.disconnect();
+      window.clearInterval(watcher);
       window.removeEventListener("hashchange", onHash);
     };
   }, []);
@@ -76,7 +87,7 @@ export function StageGuides() {
         onMouseLeave={cancelQueued}
         className="stage-list mt-6 flex flex-col gap-2 lg:mt-8 lg:h-[min(74svh,40rem)] lg:flex-row lg:gap-3"
       >
-        {ageStages.map((stage, index) => {
+        {guideStages.map((stage, index) => {
           const isActive = index === active;
           return (
             <li
@@ -87,7 +98,7 @@ export function StageGuides() {
               onMouseMove={(event) => {
                 if (event.movementX !== 0 || event.movementY !== 0) queueActive(index);
               }}
-              className="stage-card relative h-20 scroll-mt-6 overflow-hidden rounded-[1.75rem] bg-[#2a201b] text-white data-[active=true]:h-[27rem] lg:h-auto lg:min-w-0 lg:flex-1 lg:data-[active=true]:h-auto lg:data-[active=true]:flex-[3.4]"
+              className="stage-card relative h-20 scroll-mt-20 overflow-hidden lg:scroll-mt-24 rounded-[1.75rem] bg-[#2a201b] text-white data-[active=true]:h-[27rem] lg:h-auto lg:min-w-0 lg:flex-1 lg:data-[active=true]:h-auto lg:data-[active=true]:flex-[3.4]"
               style={
                 {
                   "--stage-delay": `${index * 90}ms`,
@@ -114,7 +125,7 @@ export function StageGuides() {
                 aria-controls={`donem-detay-${stage.id}`}
                 onClick={() => setActive(index)}
                 onFocus={() => setActive(index)}
-                className="absolute inset-0 z-10 flex cursor-pointer items-start p-5 text-left text-2xl font-medium tracking-[-0.015em] whitespace-nowrap lg:p-6 lg:text-3xl"
+                className="absolute inset-0 z-10 flex cursor-pointer items-start p-5 text-left text-2xl font-medium tracking-[-0.015em] whitespace-nowrap lg:p-3.5 lg:text-[clamp(1.125rem,1.9vw,1.875rem)] xl:p-5"
               >
                 {stage.label}
               </button>
@@ -148,7 +159,7 @@ export function StageGuides() {
       </ul>
 
       <p className="mt-4 text-center text-xs text-ink/60">
-        Taslak içerik. CDC, AASM ve DSÖ verilerine dayanır; tıbbi tavsiye değildir. Her çocuk kendi
+        Taslak içerik. CDC, AASM, ACOG ve DSÖ verilerine dayanır; tıbbi tavsiye değildir. Her çocuk kendi
         hızında gelişir.
       </p>
     </section>

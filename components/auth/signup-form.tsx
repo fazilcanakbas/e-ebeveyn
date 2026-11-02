@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import { ageStages } from "@/lib/age-stages";
+import { guideStages } from "@/lib/age-stages";
 import { Field, isEmail, PasswordField, PreviewNotice, SocialLogin, SubmitButton } from "./auth-fields";
 
 type Errors = { name?: string; email?: string; password?: string; terms?: string };
@@ -66,7 +66,7 @@ export function SignupForm() {
             Bebeğiniz kaç aylık? <span className="font-normal text-ink/55">(isteğe bağlı)</span>
           </legend>
           <div className="flex flex-wrap gap-1.5">
-            {ageStages.map((stage) => (
+            {guideStages.map((stage) => (
               <label key={stage.id} className="cursor-pointer">
                 <input type="radio" name="age" value={stage.id} className="peer sr-only" />
                 <span className="block rounded-full border border-ink/20 px-3.5 py-2 text-sm font-medium transition-colors duration-300 peer-checked:border-cobalt peer-checked:bg-cobalt peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 hover:border-ink/50">
@@ -89,11 +89,11 @@ export function SignupForm() {
               className="mt-0.5 size-[1.125rem] shrink-0 cursor-pointer accent-cobalt"
             />
             <span>
-              <Link href="#" className="underline underline-offset-2 hover:text-cobalt">
+              <Link href="/kullanim-kosullari" className="underline underline-offset-2 hover:text-cobalt">
                 Kullanım Koşulları
               </Link>
               &apos;nı ve{" "}
-              <Link href="#" className="underline underline-offset-2 hover:text-cobalt">
+              <Link href="/gizlilik" className="underline underline-offset-2 hover:text-cobalt">
                 KVKK Aydınlatma Metni
               </Link>
               &apos;ni okudum, kabul ediyorum.
