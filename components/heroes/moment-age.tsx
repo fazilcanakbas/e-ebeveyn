@@ -18,7 +18,6 @@ export function MomentAge() {
       </button>
     );
   }
-
   return (
     <ul aria-label="Bebeğinizin yaşı" className="anim-word flex flex-wrap gap-1.5 lg:gap-2">
       {guideStages.map((stage, index) => (
